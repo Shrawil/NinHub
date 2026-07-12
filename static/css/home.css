@@ -515,3 +515,48 @@
 .comment-btn:hover{
     color:#d1d5db;
 }
+
+@media (max-width:768px){
+
+    .content{
+        padding:0px;
+        padding-bottom:70px;
+    }
+
+    .right{
+        display:none;
+    }
+
+    .feed{
+        max-width:100%;
+        width:100%;
+        padding:0px;
+    }
+
+    .post{
+        margin-bottom:20px;
+
+        border-radius:0;
+
+        border-left:none;
+        border-right:none;
+    }
+
+    .post-image{
+        height:auto;
+        aspect-ratio:1/1;
+        object-fit:cover;
+    }
+
+    .post-header{
+        padding:12px;
+    }
+
+    .actions{
+        padding:12px;
+    }
+
+    .post p{
+        padding:0 12px 12px;
+    }
+}

@@ -9,6 +9,92 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<style>
+    /* ================= MOBILE ================= */
+
+@media (max-width:768px){
+
+    .profile-container{
+        width:100%;
+        padding:15px;
+    }
+
+    .profile-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:20px;
+    }
+
+    .profile-pic{
+        width:110px;
+        height:110px;
+        align-self:center;
+    }
+
+    .profile-info{
+        width:100%;
+    }
+
+    .top{
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .top h2{
+        font-size:24px;
+    }
+    
+
+    .top a,
+    .top button{
+        width:auto;
+        padding:8px 14px;
+        font-size:14px;
+    }
+
+    .stats{
+        justify-content:space-between;
+        gap:0;
+        margin:20px 0;
+    }
+
+    .stats span{
+        text-align:center;
+        flex:1;
+    }
+
+    .bio{
+        font-size:14px;
+        word-break:break-word;
+    }
+
+    hr{
+        margin:25px 0;
+    }
+
+    .tabs{
+        gap:0;
+        justify-content:space-around;
+        margin-bottom:20px;
+    }
+
+    .tabs button{
+        font-size:15px;
+        flex:1;
+    }
+
+    .post-grid{
+        grid-template-columns:repeat(3,1fr);
+        gap:3px;
+    }
+
+    .grid-item{
+        border-radius:0;
+    }
+
+}
+</style>
 {% endblock %}
 
 {% block content %}

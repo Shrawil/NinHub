@@ -134,10 +134,82 @@
   .chat-form button:hover{
     background:#388bfd;
   }
+  @media (max-width:768px){
+    .chat-page{
+        display:flex;
+        flex-direction:column;
+        position:fixed;
+        top:0;
+        left:0;
+        right:0;
+        bottom:65px;   /* navbar height */
+        padding:15px;
+        background:#0d1117;
+    }
+
+    .chat-header{
+        display:flex;
+        align-items:center;
+        gap:15px;
+        padding:15px 0;
+        border-bottom:1px solid #30363d;
+    }
+
+    .chat-header i{
+        font-size:26px;
+        cursor:pointer;
+    }
+
+    .chat-header h2{
+        font-size:18px;
+    }
+
+    .messages{
+        flex:1;
+        overflow-y:auto;
+        min-height:0;
+    }
+
+    .bubble-row{
+        max-width:85%;
+    }
+
+    .bubble{
+        padding:10px 14px;
+        font-size:14px;
+        word-break:break-word;
+    }
+
+    .chat-form{
+        flex-shrink:0;
+        margin-top:12px;
+    }
+
+    .chat-form input{
+        font-size:16px; /* Prevents iOS zoom */
+    }
+
+    .chat-form button{
+        padding:12px 16px;
+        white-space:nowrap;
+    }
+
+    .sent .bubble{
+      max-width:260px;
+    }
+
+    .messages{
+      flex:1;
+    }
+}
+
 </style>
 
 <div class="chat-page">
   <div class="chat-header">
+    <a href="{% url 'chat_list' %}">
+        <i class="ri-arrow-left-line"></i>
+    </a>
     <h2>{{ other_user.username }}</h2>
   </div>
 
@@ -145,7 +217,9 @@
         {% for message in messages %}
             <div class="bubble-row {% if message.sender == request.user %}sent{% else %}received{% endif %}" data-id="{{ message.id }}">
                 <div class="bubble">
+                    {% if message.sender != request.user %}
                     <span class="sender-name">{{ message.sender }}</span>
+                    {% endif %}
                     {{ message.text }}
                 </div>
             </div>

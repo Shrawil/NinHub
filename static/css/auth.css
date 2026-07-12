@@ -187,3 +187,25 @@ button:hover{
     font-size:14px;
 
 }
+
+.form-errors{
+    background:#3b1014;
+    border:1px solid #ff4d4f;
+    color:#ffb3b3;
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:20px;
+}
+
+.form-errors p{
+    margin:6px 0;
+}
+
+.auth-input{
+    width:100%;
+    padding:12px;
+    margin:10px 0 20px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}

@@ -6,7 +6,55 @@
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<style>
+@media (max-width:768px){
+
+    .search-container{
+        width:100%;
+        margin:0;
+        padding:15px;
+    }
+
+    .search-container h1{
+        font-size:24px;
+        margin-bottom:20px;
+    }
+
+    .search-container form{
+        margin-bottom:20px;
+    }
+
+    .search-container input{
+        font-size:16px;
+        padding:14px;
+    }
+
+    .search-container button{
+        padding:14px 18px;
+    }
+
+    .user-card{
+        padding:12px;
+        gap:12px;
+    }
+
+    .user-card img{
+        width:50px;
+        height:50px;
+    }
+
+    .user-card h3{
+        font-size:16px;
+    }
+
+    .user-card small{
+        font-size:13px;
+    }
+
+}
+</style>
 {% endblock %}
 
 {% block content %}

@@ -4,6 +4,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}NinHub{% endblock %}</title>
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
         {% block css %}{% endblock %}
@@ -14,48 +15,49 @@
             <aside class="sidebar">
                 <h1 class="logo">NinHub</h1>
                 <nav>
-                    <a href="{% url 'home' %}">
+                    <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                         <i class="ri-home-5-line"></i>
-                        Home
+                        <span>Home</span>
                     </a>
-                    <a href="{% url 'search' %}">
+                    <a href="{% url 'search' %}" class="{% if request.resolver_match.url_name == 'search' %}active{% endif %}">
                         <i class="ri-search-line"></i>
-                        Search
+                        <span>Search</span>
                     </a>
                     <!-- 
                         <a href="#">
                             <i class="ri-compass-line"></i>
                             Explore
+                            <span>Explore</span>
                         </a>
                     -->
-                        <a href="{% url 'chat_list' %}">
+                        <a href="{% url 'chat_list' %}" class="{% if request.resolver_match.url_name == 'chat_list' %}active{% endif %}">
                         <i class="ri-message-2-line"></i>
-                        Messages
+                        <span>Messages</span>
                     </a>
                     <!--
                         <a href="#">
                             <i class="ri-heart-3-line"></i>
                             Notifications
+                            <span>Notifications</span>
                         </a>
                     -->
-                    <a href="{% url 'create-post' %}">
+                    <a href="{% url 'create-post' %}" class="{% if request.resolver_match.url_name == 'create_post' %}active{% endif %}">
                         <i class="ri-add-box-line"></i>
-                        Create
+                        <span>Create</span>
                     </a>
-                    <a href="{% url 'me' %}">
+                    <a href="{% url 'me' %}" class="{% if request.resolver_match.url_name == 'me' %}active{% endif %}">
                         <i class="ri-user-line"></i>
-                        Profile
+                        <span>Profile</span>
                     </a>
                 </nav>
                 <div class="logout-container">
                     <a href="{% url 'logout' %}" class="logout-btn">
                         <i class="ri-logout-box-r-line"></i>
-                        Logout
+                        <span>Logout</span>
                     </a>
                 </div>
             </aside>
             <main class="content">
-
                 {% block content %}
                 {% endblock %}
             </main>
