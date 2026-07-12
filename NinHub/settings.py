@@ -1,6 +1,9 @@
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,7 +13,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'f9baa0386db2dca3a6512b97e483849b')
 
 DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'ninhub.onrender.com').split(',')
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "ninhub.onrender.com",
+]
 
 
 # Application definition
@@ -26,7 +33,15 @@ INSTALLED_APPS = [
     'posts.apps.PostsConfig',
     'social.apps.SocialConfig',
     'django.contrib.humanize',
+    "cloudinary",
+    "cloudinary_storage",
 ]
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -93,7 +108,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'          # collectstatic needs this to ha
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
