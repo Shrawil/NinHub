@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 
 
 class Profile(models.Model):
@@ -10,8 +11,14 @@ class Profile(models.Model):
     )
     pfp = models.ImageField(
         upload_to="profile_pictures/",
-        default="profile_pictures/DefaultPFP.webp"
+        default="default.png",
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["jpg", "jpeg", "png", "webp"]
+            )
+        ],
     )
+
     bio = models.TextField(blank=True)
     website = models.URLField(blank=True)
     location = models.CharField(max_length=100, blank=True)

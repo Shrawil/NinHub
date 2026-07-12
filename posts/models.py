@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 
 class Post(models.Model):
     user = models.ForeignKey(
@@ -7,7 +8,14 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         related_name="posts"
     )
-    image = models.ImageField(upload_to="posts/")
+    image = models.ImageField(
+        upload_to="posts/",
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["jpg", "jpeg", "png", "webp"]
+            )
+        ]
+    )
     caption = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):

@@ -67,9 +67,10 @@
 }
 
 
-.post-image{
-    width:100%;
-    display:block;
+.post-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
 }
 
 .actions{
