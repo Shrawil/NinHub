@@ -7,6 +7,33 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <style>
+        .like-btn .liked {
+            color: #ff3040 !important;
+            -webkit-text-fill-color: #ff3040;
+        }
+        
+        .like-btn i{
+            transition: color .2s ease;
+        }
+        
+        .liked{
+            color:#ff3040 !important;
+            animation: like-pop .28s ease;
+        }
+        
+        @keyframes like-pop{
+            0%{
+                transform:scale(.6);
+            }
+            50%{
+                transform:scale(1.25);
+            }
+            100%{
+                transform:scale(1);
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block js %}
@@ -47,7 +74,7 @@
                 <div class="left-actions">
 
                     <a href="{% url 'like_post' post.id %}" class="like-btn">
-                        {% if post.id in liked_posts %}
+                        {% if post.is_liked %}
                             <i class="ri-heart-3-fill liked"></i>
                         {% else %}
                             <i class="ri-heart-3-line"></i>
