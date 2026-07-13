@@ -10,6 +10,7 @@ from user.models import Profile
 from posts.models import Post, Like
 from posts.forms import CommentForm
 from django.db.models import Count
+from django.db.models import Exists, OuterRef
 
 def register_view(request):
     if request.method == "POST":
@@ -41,11 +42,17 @@ def logout_view(request):
 
 @login_required
 def home_view(request):
-    profile = Profile.objects.get(user=request.user)
-    posts = Post.objects.all().order_by("-created_at")  
-    liked_posts = set(
-        Like.objects.filter(user=request.user)
-        .values_list("post_id", flat=True)
+    profile = Profile.objects.get(user=request.user)    
+    
+    liked_posts = Like.objects.filter(
+        user=request.user,
+        post=OuterRef("pk")
+    )
+
+    posts = (
+        Post.objects
+        .annotate(is_liked=Exists(liked_posts))
+        .order_by("is_liked", "-created_at")
     )
 
     already_following_ids = Follow.objects.filter(
