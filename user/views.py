@@ -51,6 +51,7 @@ def home_view(request):
 
     posts = (
         Post.objects
+        .exclude(user=request.user)
         .annotate(is_liked=Exists(liked_posts))
         .order_by("is_liked", "-created_at")
     )
