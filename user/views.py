@@ -86,7 +86,6 @@ def delete_post(request, post_id):
 
 @login_required
 def edit_view(request):
-
     profile = request.user.profile
 
     if request.method == "POST":
