@@ -128,8 +128,12 @@
 
             <div class="stats">
                 <span><b>{{profile.user.posts.count}}</b> Posts</span>
-                <span><b>{{profile.user.follower.count}}</b> Followers</span>
-                <span><b>{{profile.user.following.count}}</b> Following</span>
+                <a href="{% url 'followers_view' profile.user.username %}">
+                    <span><b>{{profile.user.follower.count}}</b> Followers</span>
+                </a>
+                <a href="{% url 'following_view' profile.user.username %}">
+                    <span><b>{{profile.user.following.count}}</b> Following</span>
+                </a>
             </div>
 
             <div class="bio">

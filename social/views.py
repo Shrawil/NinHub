@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.utils.dateparse import parse_datetime
-from .models import Message, Notification
+from .models import Message, Notification, Follow
 
 @login_required
 def chat(request, username):
@@ -90,3 +90,44 @@ def poll_messages(request, username):
         for m in msgs
     ]
     return JsonResponse({'messages': data})
+
+
+def followers_view(request, username):
+    profile_user = get_object_or_404(User, username=username)
+
+    followers = Follow.objects.filter(
+        following=profile_user
+    ).select_related("follower")
+
+    following_users = User.objects.filter(
+        id__in=Follow.objects.filter(
+            follower=request.user
+        ).values_list("following_id", flat=True)
+    )
+        
+    return render(request, "social/follow_list.html", {
+        "profile_user": profile_user,
+        "users": followers,
+        "title": "Followers",
+        "following_users": following_users,
+    })
+
+def following_view(request, username):
+    profile_user = get_object_or_404(User, username=username)
+
+    following = Follow.objects.filter(
+        follower=profile_user
+    ).select_related("following")
+
+    following_users = User.objects.filter(
+        id__in=Follow.objects.filter(
+            follower=request.user
+        ).values_list("following_id", flat=True)
+    )
+
+    return render(request, "social/follow_list.html", {
+        "profile_user": profile_user,
+        "users": following,
+        "title": "Following",
+        "following_users": following_users,
+    })

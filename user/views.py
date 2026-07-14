@@ -174,3 +174,4 @@ def search_view(request):
         "query": query,
         "users": users,
     })
+
