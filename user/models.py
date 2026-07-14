@@ -11,7 +11,7 @@ class Profile(models.Model):
     )
     pfp = models.ImageField(
         upload_to="profile_pictures/",
-        default="default.png",
+        default="profile_pictures/default.png",
         validators=[
             FileExtensionValidator(
                 allowed_extensions=["jpg", "jpeg", "png", "webp"]

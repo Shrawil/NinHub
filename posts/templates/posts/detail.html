@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Post | NinHub
+{% endblock %}
+
+{% block css %}
+<style>
+    .post-page{
+        display:flex;
+        justify-content:center;
+        padding:30px;
+    }
+
+    .post-card{
+        width:100%;
+        max-width:700px;
+        background:#1b1b1b;
+        border:1px solid #333;
+        border-radius:14px;
+        overflow:hidden;
+    }
+
+    .post-header{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        padding:15px;
+    }
+
+    .post-header img{
+        width:42px;
+        height:42px;
+        border-radius:50%;
+        object-fit:cover;
+    }
+
+    .post-header a{
+        color:white;
+        text-decoration:none;
+        font-weight:bold;
+    }
+
+    .post-image{
+        width:100%;
+        display:block;
+    }
+
+    .post-body{
+        padding:18px;
+    }
+
+    .actions{
+        display:flex;
+        gap:18px;
+        font-size:28px;
+        margin-bottom:12px;
+    }
+
+    .actions i{
+        cursor:pointer;
+    }
+
+    .liked{
+        color:#ff3040;
+    }
+
+    .caption{
+        margin:12px 0;
+        line-height:1.5;
+    }
+
+    .comments{
+        margin-top:25px;
+        border-top:1px solid #333;
+        padding-top:18px;
+    }
+
+    .comment{
+        display:flex;
+        gap:10px;
+        margin-bottom:18px;
+    }
+
+    .comment img{
+        width:38px;
+        height:38px;
+        border-radius:50%;
+        object-fit:cover;
+    }
+
+    .comment-user{
+        font-weight:bold;
+        color:white;
+        text-decoration:none;
+        margin-right:6px;
+    }
+
+    .comment-form{
+        display:flex;
+        gap:10px;
+        margin-top:20px;
+    }
+
+    .comment-form input,
+    .comment-form textarea{
+        flex:1;
+        padding:10px;
+        border-radius:8px;
+        border:none;
+        resize:none;
+    }
+
+    .comment-form button{
+        padding:10px 18px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        background:#0095f6;
+        color:white;
+    }
+</style>
+{% endblock %}
+
+{% block js %}
+    <script>
+        document.querySelectorAll(".comment-btn, .view-comments").forEach(btn => {
+            btn.onclick = function(e){
+        
+                e.preventDefault();
+        
+                document
+                    .getElementById("comments-" + this.dataset.post)
+                    .classList.add("show");
+            };
+        
+        });
+        
+        document.querySelectorAll(".close-comments").forEach(btn=>{
+        
+            btn.onclick=function(){
+        
+                this.closest(".comments-modal")
+                    .classList.remove("show");
+        
+            };
+        
+        });
+        
+        document.querySelectorAll(".comments-modal").forEach(modal=>{
+        
+            modal.onclick=function(e){
+        
+                if(e.target===modal)
+                    modal.classList.remove("show");
+        
+            };
+        
+        });
+        
+        document.querySelectorAll(".like-btn").forEach(btn => {
+        
+            btn.addEventListener("click", async function(e){
+        
+                e.preventDefault();
+        
+                const response = await fetch(this.href);
+                const data = await response.json();
+        
+                const icon = this.querySelector("i");
+        
+                icon.className = data.liked
+                    ? "ri-heart-3-fill liked"
+                    : "ri-heart-3-line";
+        
+                this.closest(".post")
+                    .querySelector(".likes-count")
+                    .textContent = `${data.likes} Likes`;
+        
+            });
+        
+        });
+
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="post-page">
+    <article class="post-card post">
+        <div class="post-header">
+            <img src="{{ post.user.profile.pfp.url }}">
+            <a href="{% url 'user_profile' post.user.username %}">
+                {{ post.user.username }}
+            </a>
+        </div>
+        <img class="post-image" src="{{ post.image.url }}">
+        <div class="post-body">
+            <div class="actions">
+                <a href="{% url 'like_post' post.id %}" class="like-btn">
+                    {% if post.is_liked %}
+                        <i class="ri-heart-3-fill liked"></i>
+                    {% else %}
+                        <i class="ri-heart-3-line"></i>
+                    {% endif %}
+                </a>
+                <i class="ri-chat-3-line"></i>
+                <i class="ri-send-plane-line"></i>
+            </div>
+            <p class="likes-count"><b>{{ post.likes.count }} Likes</b></p>
+            <p class="caption">
+                <b>{{ post.user.username }}</b>
+                {{ post.caption }}
+            </p>
+            <div class="comments">
+                <h3>Comments</h3>
+                {% for comment in post.comments.all %}
+                <div class="comment">
+                    <img src="{{ comment.user.profile.pfp.url }}">
+                    <div>
+                        <a class="comment-user" href="{% url 'user_profile' comment.user.username %}">
+                            {{ comment.user.username }}
+                        </a>
+                        {{ comment.text }}
+                    </div>
+                </div>
+                {% empty %}
+                <p>No comments yet.</p>
+                {% endfor %}
+                <form method="POST" action="{% url 'add_comment' post.id %}" class="comment-form">
+                    {% csrf_token %}
+                    {{ comment_form.text }}
+                    <button type="submit">Post</button>
+                </form>
+            </div>
+        </div>
+    </article>
+</div>
+{% endblock %}

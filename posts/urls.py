@@ -15,4 +15,5 @@ urlpatterns = [
         views.add_comment,
         name="add_comment"
     ),
+    path("post/<int:post_id>/", views.post_detail, name="post_detail"),
 ]

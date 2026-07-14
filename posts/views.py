@@ -1,3 +1,4 @@
+from django.db.models import Exists, OuterRef
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -52,4 +53,25 @@ def create_post(request):
         form = PostForm()
     return render(request, "posts/create.html", {
         "form": form
+    })
+
+
+@login_required
+def post_detail(request, post_id):
+
+    liked = Like.objects.filter(
+        user=request.user,
+        post=OuterRef("pk")
+    )
+
+    post = get_object_or_404(
+        Post.objects.annotate(
+            is_liked=Exists(liked)
+        ),
+        pk=post_id
+    )
+
+    return render(request, "posts/detail.html", {
+        "post": post,
+        "comment_form": CommentForm(),
     })

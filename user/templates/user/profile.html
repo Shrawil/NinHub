@@ -150,27 +150,29 @@
 
     <div class="post-grid">
         {% for post in profile.user.posts.all %}
+        <a href="{% url 'post_detail' post.id %}">
             <div class="grid-item">
                 <img src="{{ post.image.url }}">
-
+                
                 {% if request.user == profile.user %}
-                    <form method="POST"
-                        action="{% url 'delete_post' post.id %}"
-                        onsubmit="return confirm('Delete this post?');">
-                        {% csrf_token %}
-                        <button 
-                            type="submit" 
-                            style="
-                            background-color: transparent; 
-                            color: #c4dbff;
-                            border: none;
-                            margin: 10px;
-                            ">
-                            Delete
-                        </button>
-                    </form>
+                <form method="POST"
+                    action="{% url 'delete_post' post.id %}"
+                    onsubmit="return confirm('Delete this post?');">
+                    {% csrf_token %}
+                    <button 
+                    type="submit" 
+                    style="
+                        background-color: transparent; 
+                        color: #c4dbff;
+                        border: none;
+                        margin: 10px;
+                        ">
+                        Delete
+                    </button>
+                </form>
                 {% endif %}
             </div>
+        </a>
         {% endfor %}
     </div>
 </div>
