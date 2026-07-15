@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from .forms import PostForm, CommentForm
 from django.shortcuts import get_object_or_404, redirect
 from .models import Post, Like
+from django.templatetags.static import static
 
 @login_required
 def add_comment(request, post_id):
@@ -18,6 +19,20 @@ def add_comment(request, post_id):
             comment.user = request.user
             comment.post = post
             comment.save()
+
+
+    pfp = (
+        request.user.profile.pfp.url
+        if request.user.profile.pfp
+        else static("images/default.png")
+    )
+
+    return JsonResponse({
+        "username": request.user.username,
+        "comment": comment.text,
+        "pfp": pfp,
+    })
+
     return redirect(request.META.get("HTTP_REFERER", "home"))
 
 @login_required

@@ -136,7 +136,7 @@
                 <button type="submit">Post</button>
             </form>
         </article>
-            <div class="comments-modal" id="comments-{{ post.id }}">
+        <div class="comments-modal" id="comments-{{ post.id }}">
             <div class="comments-box">
                 <div class="comments-header">
                     <h3>Comments</h3>
@@ -222,4 +222,88 @@
         </a>
         {% endfor %}
     </aside>
+    <script>
+        document.querySelectorAll(".comment-form, .modal-comment-form").forEach(form => {
+            form.addEventListener("submit", async function(e) {
+        
+                e.preventDefault();
+        
+                const formData = new FormData(form);
+        
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                });
+        
+                const data = await response.json();
+        
+                // -------- Feed form --------
+                if (form.classList.contains("comment-form")) {
+        
+                    const comments = form.closest(".post").querySelector(".comments");
+        
+                    comments.insertAdjacentHTML("beforeend", `
+                        <div class="comment-preview">
+                            <img
+                                src="${data.pfp}"
+                                class="comment-preview-pfp"
+                            >
+        
+                            <p>
+                                <b>
+                                    <a href="/profile/${data.username}/">
+                                        ${data.username}
+                                    </a>
+                                </b>
+        
+                                ${data.comment}
+                            </p>
+                        </div>
+                    `);
+        
+                }
+        
+                // -------- Modal form --------
+                else {
+        
+                    const commentsList =
+                        form.closest(".comments-box").querySelector(".comments-list");
+        
+                    const empty = commentsList.querySelector("p");
+        
+                    if (empty) empty.remove();
+        
+                    commentsList.insertAdjacentHTML("beforeend", `
+                        <div class="comment">
+        
+                            <img
+                                class="comment-pfp"
+                                src="${data.pfp}"
+                            >
+        
+                            <div class="comment-body">
+        
+                                <a href="/profile/${data.username}/">
+                                    ${data.username}
+                                </a>
+        
+                                <span>${data.comment}</span>
+        
+                            </div>
+        
+                        </div>
+                    `);
+        
+                }
+        
+                form.reset();
+        
+            });
+        
+        });
+
+    </script>
 {% endblock %}
