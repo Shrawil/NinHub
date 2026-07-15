@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Liked By
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.container{
+    max-width:600px;
+    margin:30px auto;
+    background:#181818;
+    border:1px solid #2b2b2b;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.header{
+    padding:18px;
+    font-size:22px;
+    font-weight:bold;
+    border-bottom:1px solid #2b2b2b;
+}
+
+.user{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:15px 18px;
+    text-decoration:none;
+    color:white;
+    transition:.2s;
+}
+
+.user:hover{
+    background:#242424;
+}
+
+.user img{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.info{
+    display:flex;
+    flex-direction:column;
+}
+
+.info small{
+    color:#999;
+}
+
+.empty{
+    padding:40px;
+    text-align:center;
+    color:#999;
+}
+
+</style>
+
+<div class="container">
+    <div class="header">
+        {{ post.likes.count }} Likes
+    </div>
+    {% for like in likes %}
+    <a class="user" href="{% url 'user_profile' like.user.username %}">
+        <img src="{{ like.user.profile.pfp.url }}">
+        <div class="info">
+            <strong>{{ like.user.username }}</strong>
+            <small>{{ like.user.profile.bio }}</small>
+        </div>
+    </a>
+    {% empty %}
+    <div class="empty">
+        Nobody has liked this post yet.
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

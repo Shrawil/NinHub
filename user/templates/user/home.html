@@ -94,7 +94,9 @@
             </div>
 
             <p class="likes-count">
-                <b>{{ post.likes.count }} Likes</b>
+                <a href="{% url 'like_list' post.id %}">
+                    <b>{{ post.likes.count }} Likes</b>
+                </a>
             </p>
 
             <p>
@@ -225,11 +227,8 @@
     <script>
         document.querySelectorAll(".comment-form, .modal-comment-form").forEach(form => {
             form.addEventListener("submit", async function(e) {
-        
                 e.preventDefault();
-        
-                const formData = new FormData(form);
-        
+                const formData = new FormData(form);     
                 const response = await fetch(form.action, {
                     method: "POST",
                     body: formData,
@@ -242,7 +241,6 @@
         
                 // -------- Feed form --------
                 if (form.classList.contains("comment-form")) {
-        
                     const comments = form.closest(".post").querySelector(".comments");
         
                     comments.insertAdjacentHTML("beforeend", `
@@ -250,8 +248,7 @@
                             <img
                                 src="${data.pfp}"
                                 class="comment-preview-pfp"
-                            >
-        
+                            >        
                             <p>
                                 <b>
                                     <a href="/profile/${data.username}/">
@@ -263,12 +260,10 @@
                             </p>
                         </div>
                     `);
-        
                 }
         
                 // -------- Modal form --------
                 else {
-        
                     const commentsList =
                         form.closest(".comments-box").querySelector(".comments-list");
         
@@ -277,33 +272,22 @@
                     if (empty) empty.remove();
         
                     commentsList.insertAdjacentHTML("beforeend", `
-                        <div class="comment">
-        
+                        <div class="comment">        
                             <img
                                 class="comment-pfp"
                                 src="${data.pfp}"
-                            >
-        
-                            <div class="comment-body">
-        
+                            >        
+                            <div class="comment-body">        
                                 <a href="/profile/${data.username}/">
                                     ${data.username}
-                                </a>
-        
+                                </a>        
                                 <span>${data.comment}</span>
-        
                             </div>
-        
                         </div>
                     `);
-        
                 }
-        
                 form.reset();
-        
             });
-        
         });
-
     </script>
 {% endblock %}

@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import PostForm, CommentForm
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect
 from .models import Post, Like
 from django.templatetags.static import static
@@ -32,8 +33,6 @@ def add_comment(request, post_id):
         "comment": comment.text,
         "pfp": pfp,
     })
-
-    return redirect(request.META.get("HTTP_REFERER", "home"))
 
 @login_required
 def like_post(request, post_id):
@@ -89,4 +88,13 @@ def post_detail(request, post_id):
     return render(request, "posts/detail.html", {
         "post": post,
         "comment_form": CommentForm(),
+    })
+
+def like_list(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    likes = Like.objects.filter(post=post)
+
+    return render(request, "posts/like_list.html", {
+        "post": post,
+        "likes": likes,
     })
