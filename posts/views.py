@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect
 from .models import Post, Like
 from django.templatetags.static import static
+from django.shortcuts import redirect
 
 @login_required
 def add_comment(request, post_id):
@@ -21,18 +22,7 @@ def add_comment(request, post_id):
             comment.post = post
             comment.save()
 
-
-    pfp = (
-        request.user.profile.pfp.url
-        if request.user.profile.pfp
-        else static("images/default.png")
-    )
-
-    return JsonResponse({
-        "username": request.user.username,
-        "comment": comment.text,
-        "pfp": pfp,
-    })
+    return redirect('post_detail', post_id=post.id)
 
 @login_required
 def like_post(request, post_id):
