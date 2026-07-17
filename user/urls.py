@@ -12,17 +12,8 @@ urlpatterns = [
     path("search/", views.search_view, name='search'),
     path("delete-post/<int:post_id>/", views.delete_post, name="delete_post"),
     path("user/<str:username>/", views.user_profile, name='user_profile'),
-    path(
-        "follow/<str:username>/",
-        views.follow_user,
-        name="follow"
-    ),
-
-    path(
-        "unfollow/<str:username>/",
-        views.unfollow_user,
-        name="unfollow"
-    ),
+    path("follow/<str:username>/", views.follow_user, name="follow"),
+    path("unfollow/<str:username>/", views.unfollow_user, name="unfollow"),
     path('edit/', views.edit_view, name='edit'),
 ]
 
