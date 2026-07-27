@@ -128,6 +128,7 @@ def poll_messages(request, username):
             'text': m.text,
             # Indicates whether the message belongs to the current user.
             'is_me': m.sender_id == request.user.id,
+            'is_deleted': m.is_deleted,
         }
         for m in msgs
     ]
@@ -180,3 +181,20 @@ def following_view(request, username):
         "title": "Following",
         "following_users": following_users,
     })
+
+@login_required
+def unsend_message(request, message_id):
+    if request.method == "POST":
+        try:
+            message = Message.objects.get(
+                id=message_id,
+                sender=request.user
+            )
+
+            message.is_deleted = True
+            message.save()
+
+            return JsonResponse({"success": True})
+
+        except Message.DoesNotExist:
+            return JsonResponse({"success": False}, status=404)

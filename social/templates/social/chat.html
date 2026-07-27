@@ -179,6 +179,41 @@
     padding:25px;
 }
 
+.message-menu{
+    position:fixed;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:280px;
+
+    background:#1b1b1b;
+
+    border-radius:16px;
+
+    border:1px solid #444;
+
+    display:none;
+    flex-direction:column;
+
+    z-index:99999;
+}
+
+.message-menu button{
+    background:none;
+    border:none;
+    color:white;
+    padding:12px 18px;
+    text-align:left;
+    cursor:pointer;
+}
+
+.message-menu button:hover{
+    background:#333;
+}
+
 @media(max-width:768px){
 
 .chat-page{
@@ -223,7 +258,11 @@ body.chat-mode .chat-page{
                     {% if message.sender != request.user %}
                     <span class="sender-name">{{ message.sender }}</span>
                     {% endif %}
-                    {{ message.text }}
+                    {% if message.is_deleted %}
+                        <i>This message was deleted.</i>
+                    {% else %}
+                        {{ message.text }}
+                    {% endif %}
                 </div>
             </div>
         {% empty %}
@@ -243,30 +282,104 @@ body.chat-mode .chat-page{
     <button type="submit">Send</button>
   </form>
 </div>
+<div id="messageMenu" class="message-menu">
+    <button id="replyBtn">↩ Reply</button>
+    <button id="copyBtn">📋 Copy</button>
+    <button id="unsendBtn">🗑 Unsend</button>
+    <button id="deleteBtn">👁 Delete for me</button>
+</div>
 <script>
+/*
+  fetch(`/social/chat/unsend/${selectedMessage}/`, {
+      method: "POST",
+      headers: {
+          "X-CSRFToken": csrftoken,
+          "X-Requested-With": "XMLHttpRequest"
+      }
+  });
+*/
+
+  const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+  const menu=document.getElementById("messageMenu");
+  const copyBtn = document.getElementById("copyBtn");
+  const unsendBtn = document.getElementById("unsendBtn");
+  const deleteBtn = document.getElementById("deleteBtn");
+  const replyBtn = document.getElementById("replyBtn");
+
+  let selectedMessage=null;
+    
+  document.addEventListener("click",function(e){
+      const bubble=e.target.closest(".bubble");
+      if(!bubble){
+          menu.style.display="none";
+          return;
+      }
+      selectedMessage=bubble.parentElement.dataset.id;
+  
+      menu.style.left=e.pageX+"px";
+      menu.style.top=e.pageY+"px";
+  
+      menu.style.display="flex";
+  
+  });
+
+  unsendBtn.onclick = async () => {
+
+      const res = await fetch(`/social/chat/unsend/${selectedMessage}/`, {
+          method: "POST",
+          headers:{
+              "X-CSRFToken": csrftoken,
+              "X-Requested-With":"XMLHttpRequest"
+          }
+      });
+
+      if(res.ok){
+          const bubble = document.querySelector(
+              `.bubble-row[data-id="${selectedMessage}"] .bubble`
+          );
+
+          bubble.innerHTML = "<i>This message was deleted.</i>";
+      }
+
+      menu.style.display = "none";
+  };
+
+
+  copyBtn.onclick=()=>{
+      const bubble=document.querySelector(
+          `.bubble-row[data-id="${selectedMessage}"] .bubble`
+      );
+      navigator.clipboard.writeText(bubble.innerText);
+      menu.style.display="none";
+  };
+
   const messagesBox = document.getElementById('messages');
   const otherUsername = "{{ other_user.username }}";
   const currentUsername = "{{ request.user.username }}";
   let lastId = parseInt(messagesBox.dataset.lastId || '0');
 
   function appendMessage(sender, text, isMe, id) {
-    if (document.querySelector(`.bubble-row[data-id="${id}"]`)) {
-        return;
-    }
+      const existing = document.querySelector(
+          `.bubble-row[data-id="${id}"]`
+      );
 
-    const row = document.createElement("div");
-    row.className = "bubble-row " + (isMe ? "sent" : "received");
-    row.dataset.id = id;
+      if (existing) {
+          return;
+      }
 
-    row.innerHTML = `
-        <div class="bubble">
-            <span class="sender-name">${sender}</span>
-            ${text}
-        </div>
-    `;
+      const row = document.createElement("div");
+      row.className = "bubble-row " + (isMe ? "sent" : "received");
+      row.dataset.id = id;
 
-    messagesBox.appendChild(row);
-    messagesBox.scrollTop = messagesBox.scrollHeight;
+      row.innerHTML = `
+          <div class="bubble">
+              ${!isMe ? `<span class="sender-name">${sender}</span>` : ""}
+              ${text}
+          </div>
+      `;
+
+      messagesBox.appendChild(row);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
   }
 
   async function pollMessages() {

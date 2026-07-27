@@ -52,6 +52,8 @@ class Message(models.Model):
     # Tracks whether the receiver has opened/read the message.
     is_read = models.BooleanField(default=False)
 
+    is_deleted = models.BooleanField(default=False)
+    
     class Meta:
         # Display messages in chronological order by default.
         ordering = ["created_at"]
