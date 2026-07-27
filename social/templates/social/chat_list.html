@@ -10,7 +10,7 @@
     <div class="chat-users">
         {% for chat in chat_data %}
             <a href="{% url 'chat' chat.user.username %}" class="chat-row">
-                <img src="https://placehold.co/50" class="chat-avatar">
+                <img src="{{chat.user.profile.pfp.url}}" class="chat-avatar">
                 <div style="flex:1; min-width:0;">
                     <h4 style="margin-bottom:5px;">{{ chat.user.username }}</h4>
                     <p class="last-msg">{{ chat.last_message|truncatechars:40 }}</p>

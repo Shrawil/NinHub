@@ -28,7 +28,6 @@ def chat(request, username):
             Notification.objects.update_or_create(
                 user=other_user,
                 sender=request.user,
-                notif_type="message",
                 is_read=False,
                 defaults={"text": f"New message from {request.user.username}"},
             )
