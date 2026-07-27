@@ -98,7 +98,7 @@ a{
         display:block;
     }
 
-        .sidebar{
+    .sidebar{
 
         position: fixed !important;
 
@@ -168,6 +168,14 @@ a{
     .content{
         padding:0;
         padding-bottom:75px;
+    }
+
+    body.chat-mode .sidebar{
+        display:none !important;
+    }
+
+    body.chat-mode .content{
+        padding-bottom:0;
     }
 
 }
