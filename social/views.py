@@ -113,12 +113,9 @@ def chat_list(request):
 def poll_messages(request, username):
     other_user = User.objects.get(username=username)
 
-    after_id = request.GET.get('after_id', 0)
-
     msgs = Message.objects.filter(
         sender__in=[request.user, other_user],
         receiver__in=[request.user, other_user],
-        id__gt=after_id,
     ).order_by('id')
 
     data = [

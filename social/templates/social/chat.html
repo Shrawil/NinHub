@@ -358,15 +358,24 @@ body.chat-mode .chat-page{
   const currentUsername = "{{ request.user.username }}";
   let lastId = parseInt(messagesBox.dataset.lastId || '0');
 
-  function appendMessage(sender, text, isMe, id) {
+  function appendMessage(sender, text, isMe, id, isDeleted) {
+
       const existing = document.querySelector(
           `.bubble-row[data-id="${id}"]`
       );
 
+      // Message already exists
       if (existing) {
+
+          if (isDeleted) {
+              existing.querySelector(".bubble").innerHTML =
+                  "<i>This message was deleted.</i>";
+          }
+
           return;
       }
 
+      // Create new message
       const row = document.createElement("div");
       row.className = "bubble-row " + (isMe ? "sent" : "received");
       row.dataset.id = id;
@@ -374,7 +383,7 @@ body.chat-mode .chat-page{
       row.innerHTML = `
           <div class="bubble">
               ${!isMe ? `<span class="sender-name">${sender}</span>` : ""}
-              ${text}
+              ${isDeleted ? "<i>This message was deleted.</i>" : text}
           </div>
       `;
 
@@ -387,7 +396,13 @@ body.chat-mode .chat-page{
       const res = await fetch(`/social/chat/${otherUsername}/poll/?after_id=${lastId}`);
       const data = await res.json();
       data.messages.forEach(msg => {
-        appendMessage(msg.sender, msg.text, msg.is_me, msg.id);
+        appendMessage(
+            msg.sender,
+            msg.text,
+            msg.is_me,
+            msg.id,
+            msg.is_deleted
+        );
         lastId = msg.id;
       });
     } catch (err) {
