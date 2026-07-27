@@ -84,7 +84,11 @@ a{
 
 .content{
     flex:1;
-    padding:40px;
+    padding:24px;
+    display:flex;
+
+    height:100vh;
+    overflow:hidden;
 }
 /* ================= MOBILE ================= */
 

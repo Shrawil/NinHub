@@ -2,217 +2,216 @@
 
 {% block content %}
 <style>
-  .chat-page{
+:root{
+    --chat-bg:#0d1117;
+
+    --border:#30363d;
+
+    --sent-bg:#1f6feb;
+    --sent-text:#fff;
+
+    --received-bg:#c9d1d9;
+    --received-text:#0d1117;
+
+    --input-bg:#161b22;
+    --input-text:#fff;
+}
+
+.chat-page{
+    position:fixed;
+    top:0;
+    left:260px;      /* sidebar width */
+    right:0;
+    bottom:0;
+
     display:flex;
     flex-direction:column;
-    height:calc(100vh - 80px);
-    background:transparent;
-  }
 
-  .chat-header{
-    padding-bottom:16px;
-    margin-bottom:16px;
-    border-bottom:1px solid #30363d;
-  }
+    background:var(--chat-bg);
 
-  .chat-header h2{
+    padding:20px;
+
+    z-index:100;
+
+    overflow:hidden;
+}
+
+.chat-header{
+    display:flex;
+    align-items:center;
+
+    padding:16px 20px;
+
+    background:var(--chat-bg);
+
+    border-radius:16px;
+
+    margin-bottom:12px;
+}
+
+.chat-header h2{
+    margin-left:12px;
     font-size:22px;
     font-weight:600;
-  }
+}
 
-  .messages{
+.chat-tools{
+    margin-left:auto;
+    display:flex;
+    gap:10px;
+}
+
+.chat-tools button{
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:10px;
+    background:#1b2330;
+    color:white;
+    cursor:pointer;
+    font-size:18px;
+    transition:.2s;
+}
+
+.chat-tools button:hover{
+    background:#2b3648;
+}
+
+.messages{
     flex:1;
+    min-height:0;
+
     overflow-y:auto;
+    overflow-x:hidden;
+
     display:flex;
     flex-direction:column;
     gap:10px;
-    padding-right:6px;
-    background:transparent;
-  }
 
-  .messages::-webkit-scrollbar{
+    padding:20px;
+}
+
+.messages::-webkit-scrollbar{
     width:6px;
-  }
-  .messages::-webkit-scrollbar-thumb{
+}
+
+.messages::-webkit-scrollbar-thumb{
     background:#30363d;
     border-radius:10px;
-  }
+}
 
-  .bubble-row{
+.bubble-row{
     display:flex;
     max-width:65%;
-  }
+}
 
-  .bubble-row.sent{
+.sent{
     align-self:flex-end;
-  }
+}
 
-  .bubble-row.received{
+.received{
     align-self:flex-start;
-  }
+}
 
-  .bubble{
+.bubble{
     padding:10px 16px;
     border-radius:10px;
     font-size:14px;
-    line-height:1.4;
-    border:1px solid #30363d;
-    transition:.25s;
-  }
+    border:1px solid var(--border);
+    transition:.3s;
+}
 
-  .bubble .sender-name{
+.sender-name{
     display:block;
     font-size:11px;
-    font-weight:700;
+    font-weight:bold;
     margin-bottom:3px;
-    opacity:.7;
-  }
-
-  /* dark filled bubble for messages you sent, matches sidebar accent */
-  .sent .bubble{
-    background:#1f6feb;
-    border-color:#1f6feb;
-    color:#ffffff;
-  }
-
-  /* light bubble for received messages */
-  .received .bubble{
-    background:#c9d1d9;
-    color:#0d1117;
-  }
-
-  .received .bubble .sender-name{
     opacity:.6;
-  }
+}
 
-  .no-messages{
-    margin:auto;
-    color:#8b949e;
-    font-size:14px;
-  }
+.sent .bubble{
+    background:var(--sent-bg);
+    color:var(--sent-text);
+    border-color:var(--sent-bg);
+}
 
-  .chat-form{
+.received .bubble{
+    background:var(--received-bg);
+    color:var(--received-text);
+}
+
+.chat-form{
     display:flex;
     gap:10px;
-    padding-top:16px;
-    margin-top:16px;
-    border-top:1px solid #30363d;
-  }
 
-  .chat-form input[type="text"]{
+    margin-top:12px;
+
+    padding:16px;
+
+    background:var(--chat-bg);
+
+    border-radius:16px;
+}
+
+.chat-form input{
     flex:1;
     padding:12px 16px;
     border-radius:10px;
-    border:1px solid #30363d;
-    background:#161b22;
-    color:white;
-    font-size:14px;
+    border:1px solid var(--border);
+    background:var(--input-bg);
+    color:var(--input-text);
     outline:none;
-    transition:.25s;
-  }
+}
 
-  .chat-form input[type="text"]::placeholder{
-    color:#8b949e;
-  }
-
-  .chat-form input[type="text"]:focus{
-    border-color:#1f6feb;
-  }
-
-  .chat-form button{
+.chat-form button{
     padding:12px 20px;
     border:none;
     border-radius:10px;
-    background:#1f6feb;
+    background:var(--sent-bg);
     color:white;
-    font-weight:600;
-    font-size:14px;
     cursor:pointer;
-    transition:.25s;
-  }
-
-  .chat-form button:hover{
-    background:#388bfd;
-  }
-  @media (max-width:768px){
-    .chat-page{
-        display:flex;
-        flex-direction:column;
-        position:fixed;
-        top:0;
-        left:0;
-        right:0;
-        bottom:65px;   /* navbar height */
-        padding:15px;
-        background:#0d1117;
-    }
-
-    .chat-header{
-        display:flex;
-        align-items:center;
-        gap:15px;
-        padding:15px 0;
-        border-bottom:1px solid #30363d;
-    }
-
-    .chat-header i{
-        font-size:26px;
-        cursor:pointer;
-    }
-
-    .chat-header h2{
-        font-size:18px;
-    }
-
-    .messages{
-        flex:1;
-        overflow-y:auto;
-        min-height:0;
-    }
-
-    .bubble-row{
-        max-width:85%;
-    }
-
-    .bubble{
-        padding:10px 14px;
-        font-size:14px;
-        word-break:break-word;
-    }
-
-    .chat-form{
-        flex-shrink:0;
-        margin-top:12px;
-    }
-
-    .chat-form input{
-        font-size:16px; /* Prevents iOS zoom */
-    }
-
-    .chat-form button{
-        padding:12px 16px;
-        white-space:nowrap;
-    }
-
-    .sent .bubble{
-      max-width:260px;
-    }
-
-    .messages{
-      flex:1;
-    }
 }
 
+.chat-fullscreen{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    padding:25px;
+}
+
+@media(max-width:768px){
+
+.chat-page{
+    position:fixed;
+    inset:0 0 65px 0;
+    padding:15px;
+}
+
+.bubble-row{
+    max-width:85%;
+}
+
+}
 </style>
 
 <div class="chat-page">
-  <div class="chat-header">
-    <a href="{% url 'chat_list' %}">
-        <i class="ri-arrow-left-line"></i>
-    </a>
-    <h2>{{ other_user.username }}</h2>
-  </div>
+    <div class="chat-header">
 
+        <a href="{% url 'chat_list' %}">
+            <i class="ri-arrow-left-line"></i>
+        </a>
+
+        <h2>{{ other_user.username }}</h2>
+
+        <div class="chat-tools">
+
+            <button id="themeBtn">
+                <i class="ri-palette-line"></i>
+            </button>
+
+        </div>
+
+    </div>
     <div class="messages" id="messages" data-last-id="{{ messages.last.id|default:0 }}">
         {% for message in messages %}
             <div class="bubble-row {% if message.sender == request.user %}sent{% else %}received{% endif %}" data-id="{{ message.id }}">
@@ -301,5 +300,80 @@
   });
 
   messagesBox.scrollTop = messagesBox.scrollHeight;
+
+  /* ---------------- THEMES ---------------- */
+
+  const themes=[
+
+  {
+  bg:"#0d1117",
+  sent:"#1f6feb",
+  received:"#c9d1d9",
+  receivedText:"#0d1117",
+  input:"#161b22"
+  },
+
+  {
+  bg:"#313338",
+  sent:"#5865F2",
+  received:"#404249",
+  receivedText:"#ffffff",
+  input:"#383a40"
+  },
+
+  {
+  bg:"#111b21",
+  sent:"#005c4b",
+  received:"#202c33",
+  receivedText:"#fff",
+  input:"#202c33"
+  },
+
+  {
+  bg:"#000000",
+  sent:"#00aa00",
+  received:"#111111",
+  receivedText:"#00ff00",
+  input:"#111111"
+  },
+
+  {
+  bg:"#24153d",
+  sent:"#7c3aed",
+  received:"#3d2a5d",
+  receivedText:"#fff",
+  input:"#2d1f4d"
+  }
+
+  ];
+
+  let currentTheme=Number(localStorage.getItem("chatTheme"))||0;
+
+  function applyTheme(i){
+
+  const t=themes[i];
+
+  document.documentElement.style.setProperty("--chat-bg",t.bg);
+  document.documentElement.style.setProperty("--sent-bg",t.sent);
+  document.documentElement.style.setProperty("--received-bg",t.received);
+  document.documentElement.style.setProperty("--received-text",t.receivedText);
+  document.documentElement.style.setProperty("--input-bg",t.input);
+
+  localStorage.setItem("chatTheme",i);
+
+  }
+
+  applyTheme(currentTheme);
+
+  document.getElementById("themeBtn").onclick=function(){
+
+  currentTheme++;
+
+  if(currentTheme>=themes.length)
+      currentTheme=0;
+
+  applyTheme(currentTheme);
+
+  };
 </script>
 {% endblock %}
