@@ -86,9 +86,6 @@ a{
     flex:1;
     padding:24px;
     display:flex;
-
-    height:100vh;
-    overflow:hidden;
 }
 /* ================= MOBILE ================= */
 
