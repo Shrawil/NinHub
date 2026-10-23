@@ -18,8 +18,6 @@ def register_view(request):
 
         if form.is_valid():
             user = form.save()
-
-            # Log the user in immediately after successful registration.
             login(request, user)
             return redirect('home')
     else:
@@ -59,7 +57,9 @@ def logout_view(request):
 # Displays the home feed.
 @login_required
 def home_view(request):
-    profile = Profile.objects.get(user=request.user)
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
 
     # Subquery used to determine whether the current user
     # has liked each post.
