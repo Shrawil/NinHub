@@ -25,7 +25,9 @@ SECRET_KEY = 'f9baa0386db2dca3a6512b97e483849b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'ninhub.onrender.com',
+]
 
 
 # Application definition
