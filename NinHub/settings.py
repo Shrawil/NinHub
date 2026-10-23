@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'ninhub.onrender.com',
+    '127.0.0.1',
 ]
 
 

@@ -182,6 +182,7 @@
     <!-- RIGHT -->
     <aside class="right">
         <div class="profile">
+            <a href="{{ profile.pfp.url}}">Click me</a>
             <a href="{% url 'user_profile' profile.user.username %}">
                 <img src="{{ profile.pfp.url}} ">
             </a>
